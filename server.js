@@ -1,6 +1,7 @@
 import express from "express";
 import path from "path";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { logger } from "./middleware/logEvents.js";
 import { fileURLToPath } from "url";
 import { errorHandler } from "./middleware/errorHandler.js";
@@ -20,6 +21,9 @@ app.use(logger);
 app.use(credentials);
 //Cross Origin Resource Sharing
 app.use(cors(corsOptions));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 app.use("/api/users", usersRoute);
 

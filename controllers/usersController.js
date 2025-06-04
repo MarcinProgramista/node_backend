@@ -25,4 +25,21 @@ const getUser = async (req, res) => {
   }
 };
 
-export { getAllUsers, getUser };
+const updateUser = async (req, res) => {
+  //console.log(req.body);
+  const { id, name, email, password } = req.body;
+
+  try {
+    const hashedPassowrd = await bcrypt.hash(password, 10);
+    const updatedUser = await db.query(
+      "UPDATE users SET name = $1, email= $2,  password= $3 WHERE id = $4 RETURNING *",
+      [name, email, hashedPassowrd, id]
+    );
+    res
+      .status(200)
+      .json({ success: `User ${updatedUser.rows[0].email} updated` });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+export { getAllUsers, getUser, updateUser };
