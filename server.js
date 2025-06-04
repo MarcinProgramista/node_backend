@@ -6,6 +6,8 @@ import { fileURLToPath } from "url";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { credentials } from "./middleware/credentials.js";
 import { corsOptions } from "./config/corsOptions.js";
+import usersRoute from "./routes/usersRoute.js";
+
 const app = express();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -18,6 +20,8 @@ app.use(logger);
 app.use(credentials);
 //Cross Origin Resource Sharing
 app.use(cors(corsOptions));
+
+app.use("/api/users", usersRoute);
 
 app.all("*", (req, res) => {
   res.status(404);
