@@ -73,9 +73,30 @@ const updateCategryChoosenUser = async (req, res) => {
   }
 };
 
+const deleteCategryChoosenUser = async (req, res) => {
+  const { category_id } = req.params;
+  try {
+    const result = await db.query(" DELETE FROM category WHERE id = $1", [
+      category_id,
+    ]);
+    if (result.rowCount === 0)
+      return res
+        .status(404)
+        .json({ message: "Categories were not found", ok: false });
+
+    return res.status(200).json({
+      message: `Deleted items with category_id ${category_id}`,
+      ok: false,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 export {
   getAllCategories,
   getAllCategriesUser,
   addCategryChoosenUser,
   updateCategryChoosenUser,
+  deleteCategryChoosenUser,
 };
