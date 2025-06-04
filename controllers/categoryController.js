@@ -57,4 +57,25 @@ const addCategryChoosenUser = async (req, res) => {
   }
 };
 
-export { getAllCategories, getAllCategriesUser, addCategryChoosenUser };
+const updateCategryChoosenUser = async (req, res) => {
+  const { id, category, user_id } = req.body;
+  //console.log(id, category, user_id);
+  try {
+    const updatedCategory = await db.query(
+      "UPDATE category SET category = $1,  user_id= $2  WHERE id = $3 RETURNING *",
+      [category, user_id, id]
+    );
+    res.status(200).json({
+      success: `Category ${updatedCategory.rows[0].category} updated`,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export {
+  getAllCategories,
+  getAllCategriesUser,
+  addCategryChoosenUser,
+  updateCategryChoosenUser,
+};
