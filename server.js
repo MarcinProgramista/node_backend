@@ -9,6 +9,7 @@ import { credentials } from "./middleware/credentials.js";
 import { corsOptions } from "./config/corsOptions.js";
 import usersRoute from "./routes/usersRoute.js";
 import registerRoute from "./routes/registerRoute.js";
+import loginRoute from "./routes/authRoute.js";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(cookieParser());
 
 app.use("/api/users", usersRoute);
 app.use("/api/register", registerRoute);
+app.use("/api/auth", loginRoute);
 
 app.all("*", (req, res) => {
   res.status(404);
