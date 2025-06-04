@@ -42,4 +42,22 @@ const updateUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-export { getAllUsers, getUser, updateUser };
+
+const deleteUser = async (req, res) => {
+  const id = parseInt(req.params.id);
+
+  try {
+    const result = await db.query("DELETE FROM users WHERE id = $1", [id]);
+    await db.query("DELETE FROM category WHERE user_id = $1", [id]);
+    if (result.rowCount === 0)
+      return res.status(404).json({ message: "User not found", ok: false });
+
+    return res
+      .status(200)
+      .json({ message: `Deleted item with id ${id}`, ok: false });
+  } catch (err) {
+    return res.status(404).json({ message: "User not found", ok: false });
+  }
+};
+
+export { getAllUsers, getUser, updateUser, deleteUser };
