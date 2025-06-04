@@ -8,6 +8,7 @@ import { errorHandler } from "./middleware/errorHandler.js";
 import { credentials } from "./middleware/credentials.js";
 import { corsOptions } from "./config/corsOptions.js";
 import usersRoute from "./routes/usersRoute.js";
+import registerRoute from "./routes/registerRoute.js";
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use("/api/users", usersRoute);
+app.use("/api/register", registerRoute);
 
 app.all("*", (req, res) => {
   res.status(404);
