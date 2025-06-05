@@ -59,4 +59,19 @@ const getNote = async (req, res) => {
   }
 };
 
-export { getAllNotes, getAllNotesUser, addNote, getNote };
+const updateNote = async (req, res) => {
+  const { id, title, created, link, content } = req.body;
+
+  try {
+    const updatedNote = await db.query(
+      "UPDATE notes SET title = $1, content = $2 , created = $3, link = $4 WHERE id = $5 RETURNING *",
+      [title, content, created, link, id]
+    );
+
+    return res.status(200).json(updatedNote.rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export { getAllNotes, getAllNotesUser, addNote, getNote, updateNote };
