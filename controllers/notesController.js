@@ -26,4 +26,19 @@ const getAllNotesUser = async (req, res) => {
   }
 };
 
-export { getAllNotes, getAllNotesUser };
+const addNote = async (req, res) => {
+  const { user_id, category_id, title, created, link, content } = req.body;
+
+  try {
+    const newNote = await db.query(
+      "INSERT INTO notes (title, user_id, category_id, created, link, content) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      [title, user_id, category_id, created, link, content]
+    );
+
+    return res.status(200).json(newNote.rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export { getAllNotes, getAllNotesUser, addNote };
