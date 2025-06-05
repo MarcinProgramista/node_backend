@@ -11,12 +11,14 @@ const getAllNotes = async (req, res) => {
 
 const getAllNotesUser = async (req, res) => {
   const { user_id } = req.query;
+  // console.log(user_id);
+
   try {
     const result = await db.query(
-      "SELECT notes.id, created, title, users.name, notes.category_id, category.category,  link, content FROM notes JOIN users ON users.id = user_id JOIN category  ON category.id = category_id WHERE notes.user_id= $1",
+      "SELECT notes.id, created, title, notes.user_id,  notes.category_id,   link, content FROM notes  WHERE notes.user_id= $1",
       [user_id]
     );
-    // console.log(result.rows);
+    //console.log(result.rows);
     if (result.rowCount === 0) {
       return res.status(200).json([]);
     }
@@ -41,4 +43,20 @@ const addNote = async (req, res) => {
   }
 };
 
-export { getAllNotes, getAllNotesUser, addNote };
+const getNote = async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+
+  try {
+    const note = await db.query("SELECT * FROM notes WHERE id= $1", [id]);
+    console.log(note.rows);
+    if (note.rowCount === 0) {
+      return res.status(200).json([]);
+    }
+    return res.status(200).json(note.rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export { getAllNotes, getAllNotesUser, addNote, getNote };
