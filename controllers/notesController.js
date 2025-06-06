@@ -74,4 +74,26 @@ const updateNote = async (req, res) => {
   }
 };
 
-export { getAllNotes, getAllNotesUser, addNote, getNote, updateNote };
+const deleteNote = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await db.query("DELETE FROM notes WHERE id = $1", [id]);
+    if (result.rowCount === 0)
+      return res.status(404).json({ message: "Word not found", ok: false });
+
+    return res
+      .status(200)
+      .json({ message: `Deleted item with ${id}`, ok: false });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export {
+  getAllNotes,
+  getAllNotesUser,
+  addNote,
+  getNote,
+  updateNote,
+  deleteNote,
+};
