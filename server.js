@@ -23,6 +23,7 @@ const PORT = 3700;
 //custom middleware logger
 app.use(logger);
 app.use(credentials);
+//add comment
 //Cross Origin Resource Sharing
 app.use(cors(corsOptions));
 app.use(express.json());
