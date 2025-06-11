@@ -6,7 +6,7 @@ const getAllUsers = async (req, res) => {
     const users = await db.query("SELECT * FROM users");
     // console.log(users.rows);
 
-    res.json({ users: users.rows });
+    res.json(users.rows);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

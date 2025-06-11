@@ -33,6 +33,7 @@ app.use(cookieParser());
 app.use("/api/users", usersRoute);
 app.use("/api/register", registerRoute);
 app.use("/api/auth", loginRoute);
+
 app.use("/api/categories", categoriesRoute);
 app.use("/api/notes", notesRoute);
 

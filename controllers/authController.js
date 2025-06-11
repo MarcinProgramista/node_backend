@@ -4,7 +4,7 @@ import jwtTokens from "../utils/jwt-helpers.js";
 
 const handleLogin = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password);
+  //console.log(email, password);
 
   if (!email || !password)
     return res.status(400).json({ message: "Email and password is required" });
@@ -26,6 +26,7 @@ const handleLogin = async (req, res) => {
       foundUser.rows[0].name,
       foundUser.rows[0].email
     );
+    const user_id = foundUser.rows[0].id;
     try {
       const updatedUser = await db.query(
         "UPDATE users SET token = $1 WHERE id = $2 RETURNING *",
@@ -36,7 +37,8 @@ const handleLogin = async (req, res) => {
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000,
       });
-      res.status(200).json(tokens);
+      console.log(tokens, user_id);
+      res.status(200).json({ accessToken: tokens.accessToken, user_id });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
