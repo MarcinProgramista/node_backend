@@ -21,7 +21,7 @@ const getAllCategriesUser = async (req, res) => {
     );
     //console.log(user.rows.length);
 
-    res.json({ user: catgories.rows });
+    res.json(catgories.rows);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

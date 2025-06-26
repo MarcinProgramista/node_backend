@@ -14,15 +14,24 @@ const getRefreshToken = async (req, res) => {
       const foundUser = await db.query("SELECT * FROM users WHERE token =$1", [
         refreshToken,
       ]);
+      console.log(foundUser.rows[0].email);
 
-      if (!foundUser) return res.sendStatus(403);
+      if (!foundUser) return res.status(403);
       jwt.verify(
         refreshToken,
         process.env.REFRESH_TOKEN_SECRET,
-        (error, user) => {
-          if (error) return res.sendStatus(403);
-          let tokens = jwtTokens(user);
-          res.json(tokens);
+        (error, decoded) => {
+          if (error) return res.staus(403);
+          const accessToken = jwt.sign(
+            {
+              UserInfo: {
+                email: decoded.email,
+              },
+            },
+            process.env.ACCESS_TOKEN_SECRET,
+            { expiresIn: "1h" }
+          );
+          res.json({ accessToken: accessToken });
         }
       );
     } catch (error) {

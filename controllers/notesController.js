@@ -59,6 +59,23 @@ const getNote = async (req, res) => {
   }
 };
 
+const getCategoryNotes = async (req, res) => {
+  const { category_id } = req.params;
+  //console.log(category_id);
+  try {
+    const notes = await db.query("SELECT * FROM notes WHERE category_id= $1", [
+      category_id,
+    ]);
+    console.log(notes.rows);
+    if (notes.rowCount === 0) {
+      return res.status(200).json([]);
+    }
+    return res.status(200).json(notes.rows);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const updateNote = async (req, res) => {
   const { id, title, created, link, content } = req.body;
 
@@ -96,4 +113,5 @@ export {
   getNote,
   updateNote,
   deleteNote,
+  getCategoryNotes,
 };
