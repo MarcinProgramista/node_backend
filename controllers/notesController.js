@@ -66,11 +66,11 @@ const getCategoryNotes = async (req, res) => {
     const notes = await db.query("SELECT * FROM notes WHERE category_id= $1", [
       category_id,
     ]);
-    console.log(notes.rows);
+    // console.log(notes.rows);
     if (notes.rowCount === 0) {
       return res.status(200).json([]);
     }
-    return res.status(200).json(notes.rows);
+    return res.json(notes.rows);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
