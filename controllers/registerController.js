@@ -37,7 +37,7 @@ const register = async (req, res) => {
       try {
         await db.query(
           "INSERT INTO category (user_id, category) VALUES($1,$2),($1,$3),($1,$4)  RETURNING *",
-          [newUser.rows[0].id, "Film", "Books", "Notes"]
+          [newUser.rows[0].id, "Films", "Books", "Notes"]
         );
       } catch (error) {
         res.status(500).json({ error: error.message });

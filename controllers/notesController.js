@@ -20,7 +20,7 @@ const getAllNotesUser = async (req, res) => {
     );
     //console.log(result.rows);
     if (result.rowCount === 0) {
-      return res.status(200).json([]);
+      return res.status(200).json(null);
     }
     return res.status(200).json(result.rows);
   } catch (error) {
@@ -45,11 +45,11 @@ const addNote = async (req, res) => {
 
 const getNote = async (req, res) => {
   const { id } = req.params;
-  console.log(id);
+  //console.log(id);
 
   try {
     const note = await db.query("SELECT * FROM notes WHERE id= $1", [id]);
-    console.log(note.rows);
+    console.log(note.rows[0]);
     if (note.rowCount === 0) {
       return res.status(200).json([]);
     }
@@ -93,6 +93,8 @@ const updateNote = async (req, res) => {
 
 const deleteNote = async (req, res) => {
   const { id } = req.params;
+  console.log(id);
+
   try {
     const result = await db.query("DELETE FROM notes WHERE id = $1", [id]);
     if (result.rowCount === 0)
