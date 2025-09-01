@@ -11,5 +11,18 @@ export const db = new pg.Client({
   port: process.env.PG_PORT,
 });
 
-db.connect();
+// Poprawiona obsługa połączenia
+db.connect()
+  .then(() => console.log("Successfully connected to database"))
+  .catch((err) => {
+    console.error("Database connection error:", err);
+    process.exit(1);
+  });
+
+// Obsługa nieoczekiwanych błędów połączenia
+db.on("error", (err) => {
+  console.error("Unexpected database error:", err);
+  process.exit(1);
+});
+
 export default db;
