@@ -12,6 +12,7 @@ import registerRoute from "./routes/registerRoute.js";
 import loginRoute from "./routes/authRoute.js";
 import categoriesRoute from "./routes/categoryRoute.js";
 import notesRoute from "./routes/notesRoute.js";
+import rateLimit from "express-rate-limit";
 
 const app = express();
 
@@ -19,10 +20,18 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const PORT = 3700;
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minut
+  max: 100, // maksymalnie 100 żądań na IP w ciągu 15 minut
+  message: "Too many requests from this IP, please try again later.",
+});
 
+app.use("/api/", limiter);
 //custom middleware logger
 app.use(logger);
 app.use(credentials);
+
+app.use("/api/", limiter);
 //add comment
 //Cross Origin Resource Sharing
 app.use(cors(corsOptions));

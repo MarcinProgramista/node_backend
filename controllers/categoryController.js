@@ -27,33 +27,55 @@ const getAllCategriesUser = async (req, res) => {
   }
 };
 
-const addCategryChoosenUser = async (req, res) => {
+const addCategoryForUser = async (req, res) => {
   const { user_id, category } = req.body;
 
+  // Walidacja danych wejściowych
+  if (!user_id || !category) {
+    return res.status(400).json({
+      message: "User ID and category name are required",
+    });
+  }
+
+  if (typeof category !== "string" || category.trim().length === 0) {
+    return res.status(400).json({
+      message: "Category name must be a non-empty string",
+    });
+  }
+
+  if (!Number.isInteger(Number(user_id))) {
+    return res.status(400).json({
+      message: "User ID must be a valid number",
+    });
+  }
+
+  const categoryName = category.trim();
+
   try {
+    // Sprawdź czy kategoria już istnieje
     const duplicate = await db.query(
-      "SELECT * FROM category WHERE user_id = $1 AND  category = $2",
-      [user_id, category]
+      "SELECT id FROM category WHERE user_id = $1 AND LOWER(category) = LOWER($2)",
+      [user_id, categoryName]
     );
 
-    if (duplicate.rowCount !== 0)
-      return res.status(400).json({ message: "Category already exist" });
-    if (category === "")
-      return res.status(400).json({ message: "Category name can't be empty" });
-    try {
-      const newCategory = await db.query(
-        "INSERT INTO category(user_id, category) VALUES($1,$2) RETURNING *",
-        [user_id, category]
-      );
-
-      res.status(201).json({
-        success: `New category ${newCategory.rows[0].category} created`,
+    if (duplicate.rows.length > 0) {
+      return res.status(409).json({
+        message: "Category already exists",
       });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
     }
+
+    const newCategory = await db.query(
+      "INSERT INTO category(user_id, category) VALUES($1, $2) RETURNING *",
+      [user_id, categoryName]
+    );
+
+    res.status(201).json({
+      message: `Category "${newCategory.rows[0].category}" created successfully`,
+      category: newCategory.rows[0],
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Add category error:", error);
+    res.status(500).json({ error: "Failed to create category" });
   }
 };
 
@@ -96,7 +118,7 @@ const deleteCategryChoosenUser = async (req, res) => {
 export {
   getAllCategories,
   getAllCategriesUser,
-  addCategryChoosenUser,
+  addCategoryForUser,
   updateCategryChoosenUser,
   deleteCategryChoosenUser,
 };
