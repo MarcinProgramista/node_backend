@@ -1,5 +1,5 @@
 CREATE TABLE users (
-    id bigint NOT NULL,
+    id BIGSERIAL PRIMARY KEY,
     name character varying(50) NOT NULL,
     email character varying(300) NOT NULL,
     password character varying(200) NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE notes (
-    id bigint NOT NULL,
+    id BIGSERIAL PRIMARY KEY,
     user_id bigint NOT NULL,
     category_id bigint NOT NULL,
     title character varying(70) NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE notes (
 );
 
 CREATE TABLE category (
-    id bigint NOT NULL,
+    id BIGSERIAL PRIMARY KEY,
     user_id bigint NOT NULL,
     category character varying(70) NOT NULL
 );

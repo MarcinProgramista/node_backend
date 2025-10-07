@@ -26,14 +26,19 @@ const register = async (req, res) => {
 
     try {
       const hashedPassowrd = await bcrypt.hash(password, 10);
+        
       const newUser = await db.query(
         "INSERT INTO users(name, email, password) VALUES($1,$2,$3) RETURNING *",
         [name, email, hashedPassowrd]
       );
+      console.log(newUser);
+      
       res
         .status(201)
         .json({ success: `New user ${newUser.rows[0].email} created` });
-
+      
+      
+      
       try {
         await db.query(
           "INSERT INTO category (user_id, category) VALUES($1,$2),($1,$3),($1,$4)  RETURNING *",
